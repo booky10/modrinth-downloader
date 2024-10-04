@@ -29,3 +29,25 @@ NodeJS must be installed. If the yarn package manager is not installed, replace 
   - Default: _none_
 - `USER_AGENT`: A user agent identifying the instance. The email address should be changed for potential contact info.
   - Default: `Modrinth Downloader / https://github.com/booky10/modrinth-downloader / contact@example.org`
+
+## Available Routes
+
+All routes have a rate-limit of 5 requests per 30s, per ip. After this, every request will get delayed by an additional 200ms.
+
+### /
+
+This just redirects to this GitHub repository, or another URL if changed.
+
+### /download/{version}
+
+Redirects to the download URL of the primary file for the specified version. The response gets cached for one hour.
+
+If you want Modrinth's JSON response instead of a redirect, set the `Accept` header to `application/json` or add `?json` to the query parameters.
+
+### /download/{project}/latest
+
+Redirects to the download URL of the primary file for the latest version of the specified project. The response gets cached for 5min.
+
+If you want Modrinth's JSON response instead of a redirect, set the `Accept` header to `application/json` or add `?json` to the query parameters.
+
+Additionally, this endpoint also allows filtering of versions. Currently supported are `loaders`, `game_versions` and `featured`. See the [Modrinth API Docs](https://docs.modrinth.com/#tag/versions/operation/getProjectVersions) for more info on how to use these.
