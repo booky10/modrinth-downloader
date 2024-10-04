@@ -10,6 +10,12 @@ const apiUrl = process.env.API_URL || "https://api.modrinth.com";
 const host = process.env.HOST || "0.0.0.0";
 const port = Number(process.env.PORT || 8080);
 const trustProxy = process.env.TRUST_PROXY || true;
+const apiKey = process.env.MODRINTH_API_TOKEN || undefined;
+const userAgent = process.env.USER_AGENT || "Modrinth Downloader V1 / https://github.com/booky10/modrinth-downloader / boooky10@gmail.com";
+
+if (!apiKey) {
+  console.warn("WARN: No MODRINTH_API_TOKEN has been supplied");
+}
 
 const logFetch = (url: string): string => {
   console.log(`Fetching ${url}`);
