@@ -59,7 +59,11 @@ const respondVersion = async (versionJson: any, req: any, res: any, onError: (st
   const accept = req.header("Accept");
   const json = typeof req.query.json !== "undefined" || (accept && accept.includes("json"));
 
-  const fileJson = versionJson.files.find((file) => file.primary);
+  const filesJson = versionJson.files;
+  let fileJson = filesJson.find((file) => file.primary);
+  if (!fileJson && filesJson.length > 0) {
+    fileJson = filesJson[0];
+  }
   if (!fileJson && !json) {
     return onError(404, "no primary file found");
   }
