@@ -3,6 +3,7 @@ import CachingMap from "./CachingMap.js";
 import cors from "cors";
 import { slowDown } from "express-slow-down";
 
+const rootRedir = process.env.ROOT_REDIR || "https://github.com/booky10/modrinth-downloader";
 const apiUrl = process.env.API_URL || "https://api.modrinth.com";
 const port = process.env.PORT || 8080;
 
@@ -107,6 +108,10 @@ app.get("/download/:version", async (req, res) => {
     return await respondVersion(versionJson, req, res, onError);
   }
 });
+// add redirect on root
+if (rootRedir) {
+  app.get("/", (req, res) => res.redirect(rootRedir));
+}
 
 // boot process
 app.listen(port);
