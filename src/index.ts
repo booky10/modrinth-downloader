@@ -96,14 +96,23 @@ app.get("/download/:project/latest", async (req, res) => {
   const cacheKey: LatestCacheKey = { project };
 
   const query = new URLSearchParams();
+  let cancel = false;
   ["loaders", "game_versions", "featured"].forEach((key) => {
+    if (cancel) return;
     const queryVal = req.query[key];
     if (typeof queryVal !== "undefined") {
-      const queryValValid = JSON.parse(queryVal as string);
+      let queryValValid;
+      try {
+        queryValValid = JSON.parse(queryVal as string);
+      } catch (error) {
+        cancel = true;
+        return onError(400, `invalid query parameter for ${key}`);
+      }
       cacheKey[key] = queryValValid;
       query.set(key, JSON.stringify(queryValValid));
     }
   });
+  if (cancel) return;
 
   const versionsJson = await latestCache.get(cacheKey, async () => {
     const resp = await fetch(logFetch(`${apiUrl}/v2/project/${project}/version?${query.toString()}`), { headers: requestHeaders });
@@ -148,6 +157,12 @@ app.get("/download/:version", async (req, res) => {
 if (rootRedir) {
   app.get("/", (req, res) => res.redirect(rootRedir));
 }
+
+// handle errors
+app.use((err, req, res, next) => {
+  console.error(`Received error from ${req.ip} with url ${req.url}`, err);
+  res.status(500).send({ status: 500, message: "server error" });
+});
 
 // boot process
 app.listen(port, host);
