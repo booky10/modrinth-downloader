@@ -13,6 +13,12 @@ const trustProxy = process.env.TRUST_PROXY || true;
 const apiKey = process.env.MODRINTH_API_TOKEN || undefined;
 const userAgent = process.env.USER_AGENT || "Modrinth Downloader V1 / https://github.com/booky10/modrinth-downloader / boooky10@gmail.com";
 
+// https://github.com/modrinth/labrinth/blob/28b6bf8603febe674204c0f75025593bbacc16b6/src/util/validate.rs#L9
+const urlSafeRegex = '[a-zA-Z0-9!@$()`.+,_"-]';
+
+const projectRegex = RegExp(`^${urlSafeRegex}{3,64}$`); // also allows base62
+const versionRegex = RegExp(/[A-Za-z0-9]{8}/); // only allow base62 ids
+
 const requestHeaders = {
   Accept: "application/json",
   "User-Agent": userAgent,
@@ -80,7 +86,13 @@ class LatestCacheKey {
 const latestCacheMillis = 5 * 60 * 1000;
 const latestCache: CachingMap<LatestCacheKey, object> = new CachingMap(latestCacheMillis);
 app.get("/download/:project/latest", async (req, res) => {
+  const onError = (status, message) => res.status(status).send({ project, status, message });
+
   const project = req.params.project;
+  if (!projectRegex.test(project)) {
+    return onError(400, "invalid project specified");
+  }
+
   const cacheKey: LatestCacheKey = { project };
 
   const query = new URLSearchParams();
@@ -93,7 +105,6 @@ app.get("/download/:project/latest", async (req, res) => {
     }
   });
 
-  const onError = (status, message) => res.status(status).send({ project, status, message });
   const versionsJson = await latestCache.get(cacheKey, async () => {
     const resp = await fetch(logFetch(`${apiUrl}/v2/project/${project}/version?${query.toString()}`), { headers: requestHeaders });
     if (resp.status !== 200) {
@@ -115,8 +126,12 @@ app.get("/download/:project/latest", async (req, res) => {
 const versionCacheMillis = 60 * 60 * 1000;
 const versionCache: CachingMap<string, object> = new CachingMap(versionCacheMillis);
 app.get("/download/:version", async (req, res) => {
-  const version = req.params.version;
   const onError = (status, message) => res.status(status).send({ version, status, message });
+  const version = req.params.version;
+  if (!versionRegex.test(version)) {
+    return onError(400, "invalid version specified");
+  }
+
   const versionJson = await versionCache.get(version, async () => {
     const resp = await fetch(logFetch(`${apiUrl}/v2/version/${version}`), { headers: requestHeaders });
     if (resp.status !== 200) {
