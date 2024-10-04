@@ -11,7 +11,7 @@ NodeJS must be installed. If the yarn package manager is not installed, replace 
 2. Create a `.env` file and configure it
 3. Run `yarn install` to install dependencies
 4. Run `yarn run build` to build the final script
-5. Run `yarn run start` to start the process
+5. Run `yarn run start:prod` to start the web process
 
 ## Environment variables
 
