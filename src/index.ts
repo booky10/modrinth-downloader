@@ -9,9 +9,9 @@ const rootRedir = process.env.ROOT_REDIR || "https://github.com/booky10/modrinth
 const apiUrl = process.env.API_URL || "https://api.modrinth.com";
 const host = process.env.HOST || "0.0.0.0";
 const port = Number(process.env.PORT || 8080);
-const trustProxy = process.env.TRUST_PROXY || true;
+const trustProxy = process.env.TRUST_PROXY || false;
 const apiKey = process.env.MODRINTH_API_TOKEN || undefined;
-const userAgent = process.env.USER_AGENT || "Modrinth Downloader V1 / https://github.com/booky10/modrinth-downloader / boooky10@gmail.com";
+const userAgent = process.env.USER_AGENT || "Modrinth Downloader / https://github.com/booky10/modrinth-downloader / contact@example.org";
 
 // https://github.com/modrinth/labrinth/blob/28b6bf8603febe674204c0f75025593bbacc16b6/src/util/validate.rs#L9
 const urlSafeRegex = '[a-zA-Z0-9!@$()`.+,_"-]';
