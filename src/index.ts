@@ -7,7 +7,8 @@ import { slowDown } from "express-slow-down";
 
 const rootRedir = process.env.ROOT_REDIR || "https://github.com/booky10/modrinth-downloader";
 const apiUrl = process.env.API_URL || "https://api.modrinth.com";
-const port = process.env.PORT || 8080;
+const host = process.env.HOST || "0.0.0.0";
+const port = Number(process.env.PORT || 8080);
 const trustProxy = process.env.TRUST_PROXY || true;
 
 const logFetch = (url: string): string => {
@@ -122,5 +123,5 @@ if (rootRedir) {
 }
 
 // boot process
-app.listen(port);
-console.log(`Listening on ${port}`);
+app.listen(port, host);
+console.log(`Startup done! Listening on ${port}`);
