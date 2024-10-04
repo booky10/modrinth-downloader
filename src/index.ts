@@ -13,8 +13,14 @@ const trustProxy = process.env.TRUST_PROXY || true;
 const apiKey = process.env.MODRINTH_API_TOKEN || undefined;
 const userAgent = process.env.USER_AGENT || "Modrinth Downloader V1 / https://github.com/booky10/modrinth-downloader / boooky10@gmail.com";
 
+const requestHeaders = {
+  Accept: "application/json",
+  "User-Agent": userAgent,
+};
 if (!apiKey) {
   console.warn("WARN: No MODRINTH_API_TOKEN has been supplied");
+} else {
+  requestHeaders["Authorization"] = apiKey;
 }
 
 const logFetch = (url: string): string => {
@@ -89,7 +95,7 @@ app.get("/download/:project/latest", async (req, res) => {
 
   const onError = (status, message) => res.status(status).send({ project, status, message });
   const versionsJson = await latestCache.get(cacheKey, async () => {
-    const resp = await fetch(logFetch(`${apiUrl}/v2/project/${project}/version?${query.toString()}`));
+    const resp = await fetch(logFetch(`${apiUrl}/v2/project/${project}/version?${query.toString()}`), { headers: requestHeaders });
     if (resp.status !== 200) {
       onError(resp.status, "received invalid status code from modrinth");
       return undefined;
@@ -112,7 +118,7 @@ app.get("/download/:version", async (req, res) => {
   const version = req.params.version;
   const onError = (status, message) => res.status(status).send({ version, status, message });
   const versionJson = await versionCache.get(version, async () => {
-    const resp = await fetch(logFetch(`${apiUrl}/v2/version/${version}`));
+    const resp = await fetch(logFetch(`${apiUrl}/v2/version/${version}`), { headers: requestHeaders });
     if (resp.status !== 200) {
       onError(resp.status, "received invalid status code from modrinth");
       return undefined;
