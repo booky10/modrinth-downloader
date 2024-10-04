@@ -1,3 +1,5 @@
+import "dotenv/config.js";
+
 import express from "express";
 import CachingMap from "./CachingMap.js";
 import cors from "cors";
@@ -6,6 +8,7 @@ import { slowDown } from "express-slow-down";
 const rootRedir = process.env.ROOT_REDIR || "https://github.com/booky10/modrinth-downloader";
 const apiUrl = process.env.API_URL || "https://api.modrinth.com";
 const port = process.env.PORT || 8080;
+const trustProxy = process.env.TRUST_PROXY || true;
 
 const logFetch = (url: string): string => {
   console.log(`Fetching ${url}`);
@@ -15,6 +18,10 @@ const logFetch = (url: string): string => {
 // express setup
 const app = express();
 app.disable("x-powered-by");
+if (trustProxy) {
+  console.warn("WARN: Will be trusting proxy fowarding headers");
+  app.set("trust proxy", true);
+}
 
 app.use(cors());
 app.use(
@@ -24,6 +31,7 @@ app.use(
     windowMs: 30 * 1000,
     delayAfter: 5,
     delayMs: (hits) => hits * 200,
+    validate: { trustProxy: false },
   })
 );
 
