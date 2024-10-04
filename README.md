@@ -34,17 +34,17 @@ NodeJS must be installed. If the yarn package manager is not installed, replace 
 
 All routes have a rate-limit of 5 requests per 30s, per ip. After this, every request will get delayed by an additional 200ms.
 
-### /
+### `/`
 
 This just redirects to this GitHub repository, or another URL if changed.
 
-### /download/{version}
+### `/download/{version}`
 
 Redirects to the download URL of the primary file for the specified version. The response gets cached for one hour.
 
 If you want Modrinth's JSON response instead of a redirect, set the `Accept` header to `application/json` or add `?json` to the query parameters.
 
-### /download/{project}/latest
+### `/download/{project}/latest`
 
 Redirects to the download URL of the primary file for the latest version of the specified project. The response gets cached for 5min.
 
