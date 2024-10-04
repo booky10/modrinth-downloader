@@ -38,11 +38,16 @@ All routes have a rate-limit of 5 requests per 30s, per ip. After this, every re
 
 This just redirects to this GitHub repository, or another URL if changed.
 
+Example: https://modrinth.booky.dev/
+
 ### `/download/{version}`
 
 Redirects to the download URL of the primary file for the specified version. The response gets cached for one hour.
 
 If you want Modrinth's JSON response instead of a redirect, set the `Accept` header to `application/json` or add `?json` to the query parameters.
+
+Example (Download): https://modrinth.booky.dev/download/pyiVLk9R
+Example (Json): https://modrinth.booky.dev/download/pyiVLk9R?json
 
 ### `/download/{project}/latest`
 
@@ -51,3 +56,6 @@ Redirects to the download URL of the primary file for the latest version of the 
 If you want Modrinth's JSON response instead of a redirect, set the `Accept` header to `application/json` or add `?json` to the query parameters.
 
 Additionally, this endpoint also allows filtering of versions. Currently supported are `loaders`, `game_versions` and `featured`. See the [Modrinth API Docs](https://docs.modrinth.com/#tag/versions/operation/getProjectVersions) for more info on how to use these.
+
+Example (Download): https://modrinth.booky.dev/download/stackdeobf/latest
+Example (Json): https://modrinth.booky.dev/download/stackdeobf/latest?json
