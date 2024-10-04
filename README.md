@@ -46,7 +46,7 @@ Redirects to the download URL of the primary file for the specified version. The
 
 If you want Modrinth's JSON response instead of a redirect, set the `Accept` header to `application/json` or add `?json` to the query parameters.
 
-Example (Download): https://modrinth.booky.dev/download/pyiVLk9R
+Example (Download): https://modrinth.booky.dev/download/pyiVLk9R <br>
 Example (Json): https://modrinth.booky.dev/download/pyiVLk9R?json
 
 ### `/download/{project}/latest`
@@ -57,5 +57,5 @@ If you want Modrinth's JSON response instead of a redirect, set the `Accept` hea
 
 Additionally, this endpoint also allows filtering of versions. Currently supported are `loaders`, `game_versions` and `featured`. See the [Modrinth API Docs](https://docs.modrinth.com/#tag/versions/operation/getProjectVersions) for more info on how to use these.
 
-Example (Download): https://modrinth.booky.dev/download/stackdeobf/latest
+Example (Download): https://modrinth.booky.dev/download/stackdeobf/latest <br>
 Example (Json): https://modrinth.booky.dev/download/stackdeobf/latest?json
